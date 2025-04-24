@@ -241,8 +241,14 @@ function [output_mat,output_table,dates_nb] =  call_dbnomics(varargin)
 		
 			% split again
 			split_slug	= strsplit(deblank(slugs(i1,:)),'/');
-			rownames{i1} = split_slug{3};
-			
+            % if series name too long, reduce length to 63 caracters
+			raw_name = split_slug{3};
+            short_name = regexprep(raw_name, '[-.]', '_');
+            if length(short_name) > namelengthmax
+                short_name = short_name(1:namelengthmax);
+            end
+            rownames{i1} = short_name;
+			            
 		end
 		
 		% check the name compatibility : no "." and "-" allowed, or starting with a nb
