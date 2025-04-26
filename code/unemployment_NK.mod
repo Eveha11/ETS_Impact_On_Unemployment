@@ -11,7 +11,10 @@ close all;
 % 1. Defining variables
 %----------------------------------------------------------------
 
-var rr c n u w y k i lb mc pi r q x v_H v_P e mu g tau gy_obs gc_obs gi_obs pi_obs r_obs u_obs varrho;
+var rr c n u w y k i lb mc pi r q x v_H v_P e mu g tau gy_obs gc_obs gi_obs pi_obs r_obs u_obs varrho 
+gy_obs ${\Delta log(Y_{t})}$ (long_name='Output growth'), 
+pi_obs ${\pi_{t}}$ (long_name='Inflation'),
+u_obs ${u_{t}}$ (long_name='Unemployment');
 var e_a e_g e_c e_m e_i e_r e_t;
 
 
@@ -184,18 +187,44 @@ steady_state_model;
 	gy_obs = 0; gc_obs = 0; gi_obs = 0; pi_obs = 0; r_obs = 0; u_obs = 0; 
 end;
 
+varobs gy_obs pi_obs u_obs;
 
-%%% SIMULATIONS
-shocks;
-	var eta_a;	stderr 0.01;
-	var eta_g;	stderr 0.01;
-	var eta_c;	stderr 0.01;
-	var eta_m;	stderr 0.01;
-	var eta_i;	stderr 0.01;
-	var eta_r;	stderr 0.01;
+estimated_params;
+//	PARAM NAME,		INITVAL,	LB,		UB,		PRIOR_SHAPE,		PRIOR_P1,		PRIOR_P2,		PRIOR_P3,		PRIOR_P4,		JSCALE
+	stderr eta_g,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_g,				.92,    	,		,		beta_pdf,			.5,				0.2;
+	stderr eta_m,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_m,				.92,    	,		,		beta_pdf,			.5,				0.2;
+	stderr eta_r,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_r,				.5,    		,		,		beta_pdf,			.5,				0.2;
+	stderr eta_c,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_c,				.96,    		,		,		beta_pdf,			.5,				0.2;
+	stderr eta_i,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_i,				.9,    		,		,		beta_pdf,			.5,				0.2;
 end;
-	
-%resid(1);
-%check;
 
-stoch_simul(irf=30,order=1) y c i pi r u x ;
+%%% ESTIMATION
+estimation(datafile=myobs,	% your datafile, must be in your current folder
+first_obs=1,				% First data of the sample
+mode_compute=4,				% optimization algo, keep it to 4
+mh_replic=10000,			% number of sample in Metropolis-Hastings
+mh_jscale=0.45,				% adjust this to have an acceptance rate between 0.2 and 0.3
+prefilter=1,				% remove the mean in the data
+lik_init=2,					% Don't touch this,
+mh_nblocks=1,				% number of mcmc chains
+forecast=8					% forecasts horizon
+) gy_obs pi_obs u_obs;
+
+% load estimated parameters
+fn = fieldnames(oo_.posterior_mean.parameters);
+for ix = 1:size(fn,1)
+	set_param_value(fn{ix},eval(['oo_.posterior_mean.parameters.' fn{ix} ]))
+end
+% load estimated shocks
+fx = fieldnames(oo_.posterior_mean.shocks_std);
+for ix = 1:size(fx,1)
+	idx = strmatch(fx{ix},M_.exo_names,'exact');
+	M_.Sigma_e(idx,idx) = eval(['oo_.posterior_mean.shocks_std.' fx{ix}])^2;
+end
+
+stoch_simul(irf=30,order=1) gy_obs pi_obs u_obs ;
