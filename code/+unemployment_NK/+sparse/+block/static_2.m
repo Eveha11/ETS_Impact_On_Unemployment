@@ -2,4 +2,5 @@ function [y, T] = static_2(y, x, params, sparse_rowval, sparse_colval, sparse_co
   y(21)=0;
   y(22)=0;
   y(23)=0;
+  y(27)=0;
 end

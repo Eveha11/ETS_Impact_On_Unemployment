@@ -17,7 +17,7 @@ assert(length(T) >= 14);
 
 T(1) = y(2)^(-params(4));
 T(2) = y(7)^params(3);
-T(3) = params(26)*y(28)*T(2);
+T(3) = params(26)*y(29)*T(2);
 T(4) = y(3)^(1-params(3));
 T(5) = y(6)^(-params(25));
 T(6) = y(6)^(1-params(25));

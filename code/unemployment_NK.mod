@@ -11,17 +11,18 @@ close all;
 % 1. Defining variables
 %----------------------------------------------------------------
 
-var rr c n u w y k i lb mc pi r q x v_H v_P e mu g tau gy_obs gc_obs gi_obs pi_obs r_obs u_obs varrho 
+var rr c n u w y k i lb mc pi r q x v_H v_P e mu g tau gy_obs gc_obs gi_obs pi_obs r_obs u_obs ges_obs varrho 
 gy_obs ${\Delta log(Y_{t})}$ (long_name='Output growth'), 
 pi_obs ${\pi_{t}}$ (long_name='Inflation'),
-u_obs ${u_{t}}$ (long_name='Unemployment');
-var e_a e_g e_c e_m e_i e_r e_t;
+u_obs ${u_{t}}$ (long_name='Unemployment'),
+ges_obs ${ges_{t}}$ (long_name='Emissions');
+var e_a e_g e_c e_m e_i e_r e_t e_e;
 
 
-varexo eta_a eta_g eta_c eta_m eta_i eta_r eta_t;
+varexo eta_a eta_g eta_c eta_m eta_i eta_r eta_t eta_e;
  
 parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma epsilon kappa rho phi_y phi_pi xi
-			tau0 y0 sig theta1 theta2 varphi A piss  rho_a rho_g rho_c rho_m rho_i rho_r rho_t;
+			tau0 y0 sig theta1 theta2 varphi A piss  rho_a rho_g rho_c rho_m rho_i rho_r rho_t rho_e;
             
             
 %----------------------------------------------------------------
@@ -62,6 +63,7 @@ rho_m  	= 0.95;
 rho_i	= 0.95;
 rho_r	= 0.40;
 rho_t	= 0.8;
+rho_e   = 0.5;
 
 %----------------------------------------------------------------
 % 3. Model
@@ -110,7 +112,7 @@ model;
 	[name='Fisherian equation']
 	rr = r/pi(+1);
 	[name='Total emissions']
-	e = sig*(1-mu)*y^(1-varphi);
+	e = sig*(1-mu)*y^(1-varphi)*e_e;
 	
 	%%% Policy instruments
 	[name='Monetary Policy rule']
@@ -134,6 +136,8 @@ model;
 	r_obs  = r  - steady_state(r);
 	[name='measurement unemployment']
 	u_obs  = u  - steady_state(u);
+    [name='measurement emissions growth']
+    ges_obs = log(e/e(-1));
 	
 	[name='shocks']
 	log(e_a) = rho_a*log(e_a(-1))+eta_a;
@@ -143,6 +147,7 @@ model;
     log(e_m) = rho_m*log(e_m(-1))+eta_m;
     log(e_r) = rho_r*log(e_r(-1))+eta_r;  
     log(e_t) = rho_t*log(e_t(-1))+eta_t;  
+    log(e_e) = rho_e*log(e_e(-1))+eta_e;
 end;
 
 
@@ -184,10 +189,11 @@ steady_state_model;
 	e_i 	= 1;
 	e_r 	= 1;
 	e_t 	= 1;
-	gy_obs = 0; gc_obs = 0; gi_obs = 0; pi_obs = 0; r_obs = 0; u_obs = 0; 
+    e_e     = 1;
+	gy_obs = 0; gc_obs = 0; gi_obs = 0; pi_obs = 0; r_obs = 0; u_obs = 0; ges_obs = 0;
 end;
 
-varobs gy_obs pi_obs u_obs;
+varobs gy_obs pi_obs u_obs ges_obs;
 
 estimated_params;
 //	PARAM NAME,		INITVAL,	LB,		UB,		PRIOR_SHAPE,		PRIOR_P1,		PRIOR_P2,		PRIOR_P3,		PRIOR_P4,		JSCALE
@@ -201,6 +207,8 @@ estimated_params;
 	rho_c,				.96,    		,		,		beta_pdf,			.5,				0.2;
 	stderr eta_i,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_i,				.9,    		,		,		beta_pdf,			.5,				0.2;
+    stderr eta_e,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_e,				.5,    		,		,		beta_pdf,			.5,				0.2;
 end;
 
 %%% ESTIMATION
@@ -208,12 +216,12 @@ estimation(datafile=myobs,	% your datafile, must be in your current folder
 first_obs=1,				% First data of the sample
 mode_compute=4,				% optimization algo, keep it to 4
 mh_replic=10000,			% number of sample in Metropolis-Hastings
-mh_jscale=0.45,				% adjust this to have an acceptance rate between 0.2 and 0.3
+mh_jscale=0.68,				% adjust this to have an acceptance rate between 0.2 and 0.3
 prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
 forecast=8					% forecasts horizon
-) gy_obs pi_obs u_obs;
+) gy_obs pi_obs u_obs ges_obs;
 
 % load estimated parameters
 fn = fieldnames(oo_.posterior_mean.parameters);
@@ -227,4 +235,4 @@ for ix = 1:size(fx,1)
 	M_.Sigma_e(idx,idx) = eval(['oo_.posterior_mean.shocks_std.' fx{ix}])^2;
 end
 
-stoch_simul(irf=30,order=1) gy_obs pi_obs u_obs ;
+stoch_simul(irf=30,order=1) gy_obs pi_obs u_obs ges_obs;
