@@ -1,5 +1,5 @@
 function [residual, g1, g2, g3] = dynamic(y, x, params, steady_state, it_)
-    T = NaN(27, 1);
+    T = NaN(26, 1);
     if nargout <= 1
         residual = unemployment_NK.dynamic_resid(T, y, x, params, steady_state, it_, true);
     elseif nargout == 2

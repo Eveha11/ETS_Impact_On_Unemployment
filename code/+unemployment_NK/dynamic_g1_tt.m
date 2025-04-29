@@ -18,13 +18,13 @@ function T = dynamic_g1_tt(T, y, x, params, steady_state, it_)
 %   T           [#temp variables by 1]       double  vector of temporary terms
 %
 
-assert(length(T) >= 27);
+assert(length(T) >= 26);
 
 T = unemployment_NK.dynamic_resid_tt(T, y, x, params, steady_state, it_);
 
-T(24) = getPowerDeriv(y(21),1-params(25),1);
-T(25) = getPowerDeriv(y(35)*params(22)*T(16)/(params(23)*params(24)),1/(params(24)-1),1);
-T(26) = getPowerDeriv(T(22),1-params(16),1);
-T(27) = (-(params(1)*y(54)))/(y(24)*y(24));
+T(23) = getPowerDeriv(y(22),1-params(25),1);
+T(24) = getPowerDeriv(y(36)*params(22)*T(15)/(params(23)*params(24)),1/(params(24)-1),1);
+T(25) = getPowerDeriv(T(21),1-params(16),1);
+T(26) = (-(params(1)*y(53)))/(y(25)*y(25));
 
 end
