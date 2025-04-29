@@ -50,7 +50,7 @@ piss	= 1.005;	% steady state inflation
 % value of main variables:
 tau0 	= 50 /1000;	% value of carbon tax ($/ton)
 sig		= 0.2; 		% Carbon intensity USA 0.2 Gt / Trillions USD
-y0	 	= 25;		% trillions usd PPA https://data.worldbank.org/indicator/NY.GDP.MKTP.CD
+y0	 	= 25;		% trillions usd PPA
 theta1  = 0.05;		% level of abatement costs
 theta2  = 2.6;		% curvature abatement cost
 Hss		= 1/3;		% labor supply in ss
