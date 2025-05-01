@@ -4,11 +4,11 @@ if T_order >= 1
 end
 [T_order, T] = unemployment_NK.sparse.dynamic_resid_tt(y, x, params, steady_state, T_order, T);
 T_order = 1;
-if size(T, 1) < 26
-    T = [T; NaN(26 - size(T, 1), 1)];
+if size(T, 1) < 28
+    T = [T; NaN(28 - size(T, 1), 1)];
 end
-T(23) = getPowerDeriv(y(40),1-params(25),1);
-T(24) = getPowerDeriv(y(54)*params(22)*T(15)/(params(23)*params(24)),1/(params(24)-1),1);
-T(25) = getPowerDeriv(T(21),1-params(16),1);
-T(26) = (-(params(1)*y(77)))/(y(43)*y(43));
+T(25) = getPowerDeriv(y(44),1-params(25),1);
+T(26) = getPowerDeriv(y(58)*params(22)*T(15)/(params(23)*params(24)),1/(params(24)-1),1);
+T(27) = getPowerDeriv(T(23),1-params(16),1);
+T(28) = (-(params(1)*y(85)))/(y(47)*y(47));
 end

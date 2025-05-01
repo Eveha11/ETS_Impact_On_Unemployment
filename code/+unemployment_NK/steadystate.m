@@ -26,18 +26,22 @@ function [ys_, params, info] = steadystate(ys_, exo_, params)
     ys_(19)=ys_(6)*params(9);
     params(10)=ys_(5)*params(13);
     ys_(17)=ys_(6)^(1-params(25))*params(22)*(1-ys_(18));
-    ys_(27)=1;
-    ys_(28)=1;
-    ys_(29)=1;
-    ys_(30)=1;
     ys_(31)=1;
     ys_(32)=1;
     ys_(33)=1;
     ys_(34)=1;
+    ys_(35)=1;
+    ys_(36)=1;
+    ys_(37)=1;
+    ys_(38)=1;
     ys_(22)=0;
     ys_(23)=0;
     ys_(24)=0;
     ys_(25)=0;
     ys_(26)=0;
+    ys_(27)=0;
+    lni=0;
+    ys_(29)=0;
+    ys_(30)=0;
     % Auxiliary equations
 end
