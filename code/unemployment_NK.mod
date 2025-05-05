@@ -33,27 +33,27 @@ parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma ep
 delta_N = .1;		% separation rate
 eta		= .5;		% negotiation share
 phi		= 0.05;		% shape hiring cost function
-beta 	= 0.993; 	% Discount factor firms
+beta 	= 0.985; 	% Discount factor firms
 delta 	= 0.025;	% Depreciation rate
 alpha 	= 0.30;		% Capital share
-gy 		= 0.2;   	% Public spending in GDP
-sigmaC 	= 1;		% Consumption risk aversion
-sigmaL 	= 2; 		% Elasticity of labor
-epsilon = 10;		% Elasticity between goods
-rho 	= .8;		% Monetary policy smoothing
-phi_y	= 0.1;		% Monetary policy reaction to output
-phi_pi	= 1.5;		% Monetary policy reaction to inflation
-xi 		= 80;		% Adjustment costs on prices
+gy 		= 0.55;   	% Public spending in GDP
+sigmaC 	= 2;		% Consumption risk aversion
+sigmaL 	= .26; 		% Elasticity of labor
+epsilon = 6;		% Elasticity between goods
+rho 	= .7858;	% Monetary policy smoothing
+phi_y	= 0.0811;	% Monetary policy reaction to output
+phi_pi	= 1.5;		% Monetary policy reaction to inflation - non
+xi 		= 188;		% Adjustment costs on prices
 kappa	= 4;		% adjustment costs on investment
-gamma	= .85;		% unemployment insurance as % of real wage
-varphi	= 0.2;		% elasticity of emission to GDP
-piss	= 1.005;	% steady state inflation
+gamma	= .57;		% unemployment insurance as % of real wage
+varphi	= 0.304;	% elasticity of emission to GDP
+piss	= 1.002;	% steady state inflation
 
 % value of main variables:
-tau0 	= 50 /1000;	% value of carbon tax ($/ton)
-sig		= 0.2; 		% Carbon intensity USA 0.2 Gt / Trillions USD
-y0	 	= 25;		% trillions usd PPA
-theta1  = 0.05;		% level of abatement costs
+tau0 	= 70 /1000;	% value of carbon tax ($/ton)
+sig		= 0.12; 	% Carbon intensity USA 0.2 Gt / Trillions USD
+y0	 	= 3;		% trillions usd PPA
+theta1  = 0.1;		% level of abatement costs
 theta2  = 2.6;		% curvature abatement cost
 Hss		= 1/3;		% labor supply in ss
 
@@ -211,13 +211,13 @@ estimated_params;
 	stderr eta_r,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_r,				.5,    		,		,		beta_pdf,			.5,				0.2;
 	stderr eta_c,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_c,				.96,    		,		,		beta_pdf,			.5,				0.2;
+	rho_c,				.92,    	,		,		beta_pdf,			.5,				0.2;
 	stderr eta_i,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_i,				.9,    		,		,		beta_pdf,			.5,				0.2;
+	rho_i,				.92,    	,		,		beta_pdf,			.5,				0.2;
     stderr eta_e,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_e,				.5,    		,		,		beta_pdf,			.5,				0.2;
+	rho_e,				.82,    	,		,		beta_pdf,			.5,				0.2;
     stderr eta_t,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_t,				.5,    		,		,		beta_pdf,			.5,				0.2;
+	rho_t,				.82,    	,		,		beta_pdf,			.5,				0.2;
 end;
 
 %%% ESTIMATION
