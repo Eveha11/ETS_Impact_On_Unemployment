@@ -32,7 +32,7 @@ parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma ep
 %----------------------------------------------------------------
 delta_N = .1;		% separation rate
 eta		= .5;		% negotiation share
-phi		= 0.05;		% shape hiring cost function
+phi		= 0.8;		% shape hiring cost function
 beta 	= 0.985; 	% Discount factor firms
 delta 	= 0.025;	% Depreciation rate
 alpha 	= 0.30;		% Capital share
@@ -225,7 +225,7 @@ estimation(datafile=myobs,	% your datafile, must be in your current folder
 first_obs=1,				% First data of the sample
 mode_compute=4,				% optimization algo, keep it to 4
 mh_replic=10000,			% number of sample in Metropolis-Hastings
-mh_jscale=0.55,				% adjust this to have an acceptance rate between 0.2 and 0.3
+mh_jscale=0.58,				% adjust this to have an acceptance rate between 0.2 and 0.3
 prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
