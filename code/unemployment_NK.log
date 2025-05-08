@@ -19,7 +19,7 @@ Finding the optimal block decomposition of the dynamic model...
   the largest simultaneous block has 19 equation(s) 
                                  and 18 feedback variable(s). 
 Preprocessing completed. 
-Preprocessing time: 0h00m01s.
+Preprocessing time: 0h00m00s.
 [Warning: Some of the parameters have no value (chi, b, Gam, A) when using initial_estimation_checks. If these parameters are not
 initialized in a steadystate file or a steady_state_model-block, Dynare may not be able to solve the model. Note that simul,
 perfect_foresight_setup, and perfect_foresight_solver do not automatically call the steady state file.] 
@@ -1025,6 +1025,43 @@ u_obs        0.00   53.36    1.35    0.00   33.85   11.43    0.01    0.00
 ges_obs      0.00   11.70    0.30    0.00    6.34    2.43   40.71   38.51
 cp_obs       0.00   -0.00   -0.00    0.00   -0.00   -0.00  100.00    0.00
 
+CONDITIONAL VARIANCE DECOMPOSITION (in percent)
+Period 1:
+            eta_a   eta_g   eta_c   eta_m   eta_i   eta_r   eta_t   eta_e
+gy_obs       0.00   46.71    1.25    0.00   36.86   15.17    0.01    0.00
+pi_obs       0.00    4.49    0.13    0.13    0.25   94.60    0.39    0.00
+u_obs        0.00   46.71    1.25    0.00   36.86   15.17    0.01    0.00
+ges_obs      0.00    7.76    0.21    0.00    6.12    2.52   43.00   40.39
+cp_obs       0.00    0.00    0.00    0.00    0.00    0.00  100.00    0.00
+Period 10:
+            eta_a   eta_g   eta_c   eta_m   eta_i   eta_r   eta_t   eta_e
+gy_obs       0.00   56.48    1.43    0.00   30.54   11.55    0.00    0.00
+pi_obs       0.00    1.46    0.04    0.05   38.20   59.68    0.57    0.00
+u_obs        0.00   53.50    1.35    0.00   33.88   11.27    0.00    0.00
+ges_obs      0.00   11.79    0.30    0.00    6.37    2.41   40.64   38.49
+cp_obs       0.00    0.00    0.00    0.00    0.00    0.00  100.00    0.00
+Period 20:
+            eta_a   eta_g   eta_c   eta_m   eta_i   eta_r   eta_t   eta_e
+gy_obs       0.00   56.35    1.42    0.00   30.53   11.69    0.01    0.00
+pi_obs       0.00    1.07    0.03    0.03   49.48   48.83    0.56    0.00
+u_obs        0.00   53.38    1.35    0.00   33.83   11.43    0.01    0.00
+ges_obs      0.00   11.72    0.30    0.00    6.35    2.43   40.69   38.51
+cp_obs       0.00    0.00    0.00    0.00    0.00    0.00  100.00    0.00
+Period 30:
+            eta_a   eta_g   eta_c   eta_m   eta_i   eta_r   eta_t   eta_e
+gy_obs       0.00   56.34    1.42    0.00   30.53   11.70    0.01    0.00
+pi_obs       0.00    0.97    0.03    0.03   51.58   46.83    0.56    0.00
+u_obs        0.00   53.37    1.35    0.00   33.84   11.43    0.01    0.00
+ges_obs      0.00   11.71    0.30    0.00    6.34    2.43   40.71   38.51
+cp_obs       0.00    0.00    0.00    0.00    0.00    0.00  100.00    0.00
+Period 50:
+            eta_a   eta_g   eta_c   eta_m   eta_i   eta_r   eta_t   eta_e
+gy_obs       0.00   56.34    1.42    0.00   30.53   11.70    0.01    0.00
+pi_obs       0.00    0.92    0.03    0.03   52.40   46.04    0.58    0.00
+u_obs        0.00   53.36    1.35    0.00   33.85   11.43    0.01    0.00
+ges_obs      0.00   11.70    0.30    0.00    6.34    2.43   40.71   38.51
+cp_obs       0.00    0.00    0.00    0.00    0.00    0.00  100.00    0.00
+
 
 
 MATRIX OF CORRELATIONS
@@ -1044,6 +1081,6 @@ pi_obs      0.8779   0.7847   0.7018   0.6310   0.5701
 u_obs      -0.3297  -0.0101  -0.0313  -0.0173  -0.0153
 ges_obs    -0.0986  -0.0345  -0.0365  -0.0307  -0.0278
 cp_obs     -0.0417  -0.0382  -0.0351  -0.0321  -0.0294
-Total computing time : 0h02m44s
+Total computing time : 0h02m27s
 Note: 1 warning(s) encountered in the preprocessor
 Note: warning(s) encountered in MATLAB/Octave code

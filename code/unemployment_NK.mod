@@ -245,7 +245,7 @@ for ix = 1:size(fx,1)
 end
 
 % IRF
-stoch_simul(irf=30,order=1) gy_obs pi_obs u_obs ges_obs cp_obs;
+stoch_simul(irf=30,order=1,conditional_variance_decomposition=[1 10 20 30 50]) gy_obs pi_obs u_obs ges_obs cp_obs;
 
 % Shock decomposition
 shock_decomposition gy_obs pi_obs u_obs ges_obs cp_obs;
@@ -330,23 +330,30 @@ y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat2,options_.order);
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 0.5;% add a 50 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = 0.5; % add a 50 percent increase in carbon price 
 % simulate the model
 y_carbon_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+
+%%% Add a super-positive carbon shock
+% make a copy of shock matrix
+ee_matx = ee_mat2;
+% select carbon shock
+idx = strmatch('eta_t',M_.exo_names,'exact');
+ee_matx(end-Thorizon+1,idx) = 1; % add a 100 percent increase in carbon price 
+% simulate the model
+y_carbon_plus_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 %%% Add a negative carbon shock
 % make a copy of shock matrix
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = -0.5;% add a 50 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = -0.5;% add a 50 percent decrease in carbon price 
 % simulate the model
 y_carbon_neg       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 % draw result
 var_names={'lny','lncp','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
-draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_neg)
-legend('Estimated','Carbon+','Carbon-')
-
-
+draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_plus_plus,y_carbon_neg)
+legend('Estimated','Carbon+','Carbon++','Carbon-')

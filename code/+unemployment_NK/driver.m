@@ -1122,6 +1122,7 @@ for ix = 1:size(fx,1)
 idx = strmatch(fx{ix},M_.exo_names,'exact');
 M_.Sigma_e(idx,idx) = eval(['oo_.posterior_mean.shocks_std.' fx{ix}])^2;
 end
+options_.conditional_variance_decomposition = [1;10;20;30;50;];
 options_.irf = 30;
 options_.order = 1;
 var_list_ = {'gy_obs';'pi_obs';'u_obs';'ges_obs';'cp_obs'};
@@ -1184,16 +1185,20 @@ Tvec2 		= Tvec(1):Tfreq:(Tvec(1)+size(ee_mat2,1)*Tfreq);
 y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat2,options_.order);
 ee_matx = ee_mat2;
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 0.5;
+ee_matx(end-Thorizon+1,idx) = 0.5; 
 y_carbon_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+ee_matx = ee_mat2;
+idx = strmatch('eta_t',M_.exo_names,'exact');
+ee_matx(end-Thorizon+1,idx) = 1; 
+y_carbon_plus_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 ee_matx = ee_mat2;
 idx = strmatch('eta_t',M_.exo_names,'exact');
 ee_matx(end-Thorizon+1,idx) = -0.5;
 y_carbon_neg       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 var_names={'lny','lncp','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
-draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_neg)
-legend('Estimated','Carbon+','Carbon-')
+draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_plus_plus,y_carbon_neg)
+legend('Estimated','Carbon+','Carbon++','Carbon-')
 
 
 oo_.time = toc(tic0);
