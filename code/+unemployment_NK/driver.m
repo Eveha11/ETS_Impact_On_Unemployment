@@ -979,7 +979,7 @@ M_.params(6) = .1;
 delta_N = M_.params(6);
 M_.params(12) = .5;
 eta = M_.params(12);
-M_.params(8) = 0.05;
+M_.params(8) = 0.8;
 phi = M_.params(8);
 M_.params(1) = 0.985;
 beta = M_.params(1);
@@ -1013,7 +1013,7 @@ M_.params(27) = 1.002;
 piss = M_.params(27);
 M_.params(20) = 0.07000000000000001;
 tau0 = M_.params(20);
-M_.params(22) = 0.4;
+M_.params(22) = 0.12;
 sig = M_.params(22);
 M_.params(21) = 3;
 y0 = M_.params(21);
@@ -1105,7 +1105,7 @@ options_.datafile = 'myobs';
 options_.first_obs = 1;
 options_.forecast = 8;
 options_.lik_init = 2;
-options_.mh_jscale = 0.55;
+options_.mh_jscale = 0.6;
 options_.mh_nblck = 1;
 options_.mh_replic = 10000;
 options_.mode_compute = 4;
@@ -1122,6 +1122,7 @@ for ix = 1:size(fx,1)
 idx = strmatch(fx{ix},M_.exo_names,'exact');
 M_.Sigma_e(idx,idx) = eval(['oo_.posterior_mean.shocks_std.' fx{ix}])^2;
 end
+options_.conditional_variance_decomposition = [1;10;20;30;50;];
 options_.irf = 30;
 options_.order = 1;
 var_list_ = {'gy_obs';'pi_obs';'u_obs';'ges_obs';'cp_obs'};
@@ -1184,16 +1185,20 @@ Tvec2 		= Tvec(1):Tfreq:(Tvec(1)+size(ee_mat2,1)*Tfreq);
 y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat2,options_.order);
 ee_matx = ee_mat2;
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 0.5;
+ee_matx(end-Thorizon+1,idx) = 0.5; 
 y_carbon_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+ee_matx = ee_mat2;
+idx = strmatch('eta_t',M_.exo_names,'exact');
+ee_matx(end-Thorizon+1,idx) = 1; 
+y_carbon_plus_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 ee_matx = ee_mat2;
 idx = strmatch('eta_t',M_.exo_names,'exact');
 ee_matx(end-Thorizon+1,idx) = -0.5;
 y_carbon_neg       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 var_names={'lny','lncp','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
-draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_neg)
-legend('Estimated','Carbon+','Carbon-')
+draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_plus_plus,y_carbon_neg)
+legend('Estimated','Carbon+','Carbon++','Carbon-')
 
 
 oo_.time = toc(tic0);

@@ -32,7 +32,7 @@ parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma ep
 %----------------------------------------------------------------
 delta_N = .1;		% separation rate
 eta		= .5;		% negotiation share
-phi		= 0.05;		% shape hiring cost function
+phi		= 0.8;		% shape hiring cost function
 beta 	= 0.985; 	% Discount factor firms
 delta 	= 0.025;	% Depreciation rate
 alpha 	= 0.30;		% Capital share
@@ -50,8 +50,8 @@ varphi	= 0.304;	% elasticity of emission to GDP
 piss	= 1.002;	% steady state inflation
 
 % value of main variables:
-tau0 	= 70 /1000;	% value of carbon tax ($/ton)
-sig		= 0.12; 	% Carbon intensity USA 0.2 Gt / Trillions USD
+tau0 	= 70 /1000;	% value of carbon tax ($/ton) -> valeur 2025
+sig		= 0.12; 	% Carbon intensity USA 0.2 Gt / Trillions USD 
 y0	 	= 3;		% trillions usd PPA
 theta1  = 0.1;		% level of abatement costs
 theta2  = 2.6;		% curvature abatement cost
@@ -225,7 +225,7 @@ estimation(datafile=myobs,	% your datafile, must be in your current folder
 first_obs=1,				% First data of the sample
 mode_compute=4,				% optimization algo, keep it to 4
 mh_replic=10000,			% number of sample in Metropolis-Hastings
-mh_jscale=0.55,				% adjust this to have an acceptance rate between 0.2 and 0.3
+mh_jscale=0.58,				% adjust this to have an acceptance rate between 0.2 and 0.3
 prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
@@ -245,7 +245,7 @@ for ix = 1:size(fx,1)
 end
 
 % IRF
-stoch_simul(irf=30,order=1) gy_obs pi_obs u_obs ges_obs cp_obs;
+stoch_simul(irf=30,order=1,conditional_variance_decomposition=[1 10 20 30 50]) gy_obs pi_obs u_obs ges_obs cp_obs;
 
 % Shock decomposition
 shock_decomposition gy_obs pi_obs u_obs ges_obs cp_obs;
@@ -330,23 +330,30 @@ y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat2,options_.order);
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 0.5;% add a 50 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = 0.5; % add a 50 percent increase in carbon price 
 % simulate the model
 y_carbon_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+
+%%% Add a super-positive carbon shock
+% make a copy of shock matrix
+ee_matx = ee_mat2;
+% select carbon shock
+idx = strmatch('eta_t',M_.exo_names,'exact');
+ee_matx(end-Thorizon+1,idx) = 1; % add a 100 percent increase in carbon price 
+% simulate the model
+y_carbon_plus_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 %%% Add a negative carbon shock
 % make a copy of shock matrix
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = -0.5;% add a 50 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = -0.5;% add a 50 percent decrease in carbon price 
 % simulate the model
 y_carbon_neg       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 % draw result
 var_names={'lny','lncp','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
-draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_neg)
-legend('Estimated','Carbon+','Carbon-')
-
-
+draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_plus_plus,y_carbon_neg)
+legend('Estimated','Carbon+','Carbon++','Carbon-')
