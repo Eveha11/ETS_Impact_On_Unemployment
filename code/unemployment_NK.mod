@@ -42,7 +42,7 @@ sigmaL 	= .26; 		% Elasticity of labor
 epsilon = 6;		% Elasticity between goods
 rho 	= .7858;	% Monetary policy smoothing
 phi_y	= 0.0811;	% Monetary policy reaction to output
-phi_pi	= 1.5;		% Monetary policy reaction to inflation - non
+phi_pi	= 1.5;		% Monetary policy reaction to inflation
 xi 		= 188;		% Adjustment costs on prices
 kappa	= 4;		% adjustment costs on investment
 gamma	= .57;		% unemployment insurance as % of real wage
@@ -51,8 +51,8 @@ piss	= 1.002;	% steady state inflation
 
 % value of main variables:
 tau0 	= 70 /1000;	% value of carbon tax ($/ton) -> valeur 2025
-sig		= 0.12; 	% Carbon intensity USA 0.2 Gt / Trillions USD 
-y0	 	= 3;		% trillions usd PPA
+sig		= 0.16; 	% Carbon intensity USA 0.2 Gt / Trillions USD 
+y0	 	= 2.7;		% trillions usd PPA
 theta1  = 0.1;		% level of abatement costs
 theta2  = 2.6;		% curvature abatement cost
 Hss		= 1/3;		% labor supply in ss
