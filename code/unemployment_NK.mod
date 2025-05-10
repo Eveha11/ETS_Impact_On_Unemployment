@@ -225,7 +225,7 @@ estimation(datafile=myobs,	% your datafile, must be in your current folder
 first_obs=1,				% First data of the sample
 mode_compute=4,				% optimization algo, keep it to 4
 mh_replic=10000,			% number of sample in Metropolis-Hastings
-mh_jscale=0.58,				% adjust this to have an acceptance rate between 0.2 and 0.3
+mh_jscale=0.60,				% adjust this to have an acceptance rate between 0.2 and 0.3
 prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
@@ -339,7 +339,7 @@ y_carbon_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 1; % add a 100 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = 4; % add a 100 percent increase in carbon price 
 % simulate the model
 y_carbon_plus_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
