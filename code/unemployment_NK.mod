@@ -17,7 +17,7 @@ pi_obs ${\pi_{t}}$ (long_name='Inflation'),
 u_obs ${u_{t}}$ (long_name='Unemployment'),
 ges_obs ${ges_{t}}$ (long_name='Emissions'),
 cp_obs ${cp_{t}}$ (long_name='Carbon price'),
-lny lncp lnu lnges;
+lny lnpi lnu lnges;
 var e_a e_g e_c e_m e_i e_r e_t e_e;
 
 
@@ -140,7 +140,7 @@ model;
     [name='Output gap']
     lny = log(y/steady_state(y));
     [name='Inflation gap']
-    lncp = log(pi/steady_state(pi));
+    lnpi = log(pi/steady_state(pi));
     [name='Unemployment gap']
     lnu = log(u/steady_state(u));
     [name='GES gap']
@@ -301,7 +301,7 @@ end
 y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat,options_.order);
 
 % draw result
-var_names={'lny','lncp','lnu','lnges'};
+var_names={'lny','lnpi','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
 draw_tables(var_names,M_,Ty,[],y_)
 legend('Estimated')
@@ -362,7 +362,7 @@ ee_matx(end-Thorizon+1,idx) = -1; % delete carbon tax
 y_scenario_4       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 % draw result
-var_names={'lny','lncp','lnu','lnges'};
+var_names={'lny','lnpi','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
 draw_tables(var_names,M_,Tvec2,[],y_,y_scenario_1,y_scenario_2,y_scenario_3,y_scenario_4)
 legend('Estimated','Scenario 1','Scenario 2','Scenario 3', 'Scenario 4')

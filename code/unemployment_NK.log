@@ -1,7 +1,7 @@
 Starting Dynare (version 6.2).
 Calling Dynare with arguments: none
 Starting preprocessing of the model file ... 
-WARNING: in the 'steady_state_model' block, variable 'lncp' is not assigned a value 
+WARNING: in the 'steady_state_model' block, variable 'lnpi' is not assigned a value 
 Found 38 equation(s). 
 Evaluating expressions... 
 Computing static model derivatives (order 1). 
@@ -19,7 +19,7 @@ Finding the optimal block decomposition of the dynamic model...
   the largest simultaneous block has 19 equation(s) 
                                  and 18 feedback variable(s). 
 Preprocessing completed. 
-Preprocessing time: 0h00m01s.
+Preprocessing time: 0h00m00s.
 [Warning: Some of the parameters have no value (chi, b, Gam, A) when using initial_estimation_checks. If these parameters are not
 initialized in a steadystate file or a steady_state_model-block, Dynare may not be able to solve the model. Note that simul,
 perfect_foresight_setup, and perfect_foresight_solver do not automatically call the steady state file.] 
@@ -926,6 +926,6 @@ pi_obs      0.0315   0.2977   0.1352   0.1403   0.0985
 u_obs      -0.4991   0.1164  -0.0758   0.0045  -0.0176
 ges_obs    -0.3106   0.0538  -0.0642  -0.0125  -0.0245
 cp_obs     -0.0432  -0.0394  -0.0360  -0.0329  -0.0301
-Total computing time : 0h03m07s
+Total computing time : 0h03m31s
 Note: 1 warning(s) encountered in the preprocessor
 Note: warning(s) encountered in MATLAB/Octave code
