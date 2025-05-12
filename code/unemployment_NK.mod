@@ -17,7 +17,7 @@ pi_obs ${\pi_{t}}$ (long_name='Inflation'),
 u_obs ${u_{t}}$ (long_name='Unemployment'),
 ges_obs ${ges_{t}}$ (long_name='Emissions'),
 cp_obs ${cp_{t}}$ (long_name='Carbon price'),
-lny lncp lnu lnges;
+lny lnpi lnu lnges;
 var e_a e_g e_c e_m e_i e_r e_t e_e;
 
 
@@ -42,7 +42,7 @@ sigmaL 	= .26; 		% Elasticity of labor
 epsilon = 6;		% Elasticity between goods
 rho 	= .7858;	% Monetary policy smoothing
 phi_y	= 0.0811;	% Monetary policy reaction to output
-phi_pi	= 1.5;		% Monetary policy reaction to inflation - non
+phi_pi	= 1.5;		% Monetary policy reaction to inflation
 xi 		= 188;		% Adjustment costs on prices
 kappa	= 4;		% adjustment costs on investment
 gamma	= .57;		% unemployment insurance as % of real wage
@@ -50,9 +50,9 @@ varphi	= 0.304;	% elasticity of emission to GDP
 piss	= 1.002;	% steady state inflation
 
 % value of main variables:
-tau0 	= 70 /1000;	% value of carbon tax ($/ton) -> valeur 2025
-sig		= 0.12; 	% Carbon intensity USA 0.2 Gt / Trillions USD 
-y0	 	= 3;		% trillions usd PPA
+tau0 	= 25 /1000;	% value of carbon tax ($/ton) -> valeur 2025
+sig		= 0.16; 	% Carbon intensity USA 0.2 Gt / Trillions USD 
+y0	 	= 2.7;		% trillions usd PPA
 theta1  = 0.1;		% level of abatement costs
 theta2  = 2.6;		% curvature abatement cost
 Hss		= 1/3;		% labor supply in ss
@@ -140,7 +140,7 @@ model;
     [name='Output gap']
     lny = log(y/steady_state(y));
     [name='Inflation gap']
-    lncp = log(pi/steady_state(pi));
+    lnpi = log(pi/steady_state(pi));
     [name='Unemployment gap']
     lnu = log(u/steady_state(u));
     [name='GES gap']
@@ -225,7 +225,7 @@ estimation(datafile=myobs,	% your datafile, must be in your current folder
 first_obs=1,				% First data of the sample
 mode_compute=4,				% optimization algo, keep it to 4
 mh_replic=10000,			% number of sample in Metropolis-Hastings
-mh_jscale=0.58,				% adjust this to have an acceptance rate between 0.2 and 0.3
+mh_jscale=0.60,				% adjust this to have an acceptance rate between 0.2 and 0.3
 prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
@@ -301,7 +301,7 @@ end
 y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat,options_.order);
 
 % draw result
-var_names={'lny','lncp','lnu','lnges'};
+var_names={'lny','lnpi','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
 draw_tables(var_names,M_,Ty,[],y_)
 legend('Estimated')
@@ -325,35 +325,44 @@ Tvec2 		= Tvec(1):Tfreq:(Tvec(1)+size(ee_mat2,1)*Tfreq);
 % simulate the model
 y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat2,options_.order);
 
-%%% Add a positive carbon shock
+%%% Scenario 1
 % make a copy of shock matrix
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 0.5; % add a 50 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = 2.16; % add a 216 percent increase in carbon price 
 % simulate the model
-y_carbon_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+y_scenario_1      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
-%%% Add a super-positive carbon shock
+%%% Scenario 2
 % make a copy of shock matrix
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 1; % add a 100 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = 2.38; % add a 238 percent increase in carbon price 
 % simulate the model
-y_carbon_plus_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+y_scenario_2      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
-%%% Add a negative carbon shock
+%%% Scenario 3
 % make a copy of shock matrix
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = -0.5;% add a 50 percent decrease in carbon price 
+ee_matx(end-Thorizon+1,idx) = 6.67; % add a 667 percent increase in carbon price 
 % simulate the model
-y_carbon_neg       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+y_scenario_3       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+
+%%% Scenario 4
+% make a copy of shock matrix
+ee_matx = ee_mat2;
+% select carbon shock
+idx = strmatch('eta_t',M_.exo_names,'exact');
+ee_matx(end-Thorizon+1,idx) = -1; % delete carbon tax
+% simulate the model
+y_scenario_4       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 % draw result
-var_names={'lny','lncp','lnu','lnges'};
+var_names={'lny','lnpi','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
-draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_plus_plus,y_carbon_neg)
-legend('Estimated','Carbon+','Carbon++','Carbon-')
+draw_tables(var_names,M_,Tvec2,[],y_,y_scenario_1,y_scenario_2,y_scenario_3,y_scenario_4)
+legend('Estimated','Scenario 1','Scenario 2','Scenario 3', 'Scenario 4')

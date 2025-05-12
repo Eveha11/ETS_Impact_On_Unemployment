@@ -129,9 +129,9 @@ M_.endo_names_long(26) = {'Carbon price'};
 M_.endo_names(27) = {'lny'};
 M_.endo_names_tex(27) = {'lny'};
 M_.endo_names_long(27) = {'lny'};
-M_.endo_names(28) = {'lncp'};
-M_.endo_names_tex(28) = {'lncp'};
-M_.endo_names_long(28) = {'lncp'};
+M_.endo_names(28) = {'lnpi'};
+M_.endo_names_tex(28) = {'lnpi'};
+M_.endo_names_long(28) = {'lnpi'};
 M_.endo_names(29) = {'lnu'};
 M_.endo_names_tex(29) = {'lnu'};
 M_.endo_names_long(29) = {'lnu'};
@@ -433,7 +433,7 @@ M_.mapping.u_obs.eqidx = [24 ];
 M_.mapping.ges_obs.eqidx = [25 ];
 M_.mapping.cp_obs.eqidx = [26 ];
 M_.mapping.lny.eqidx = [27 ];
-M_.mapping.lncp.eqidx = [28 ];
+M_.mapping.lnpi.eqidx = [28 ];
 M_.mapping.lnu.eqidx = [29 ];
 M_.mapping.lnges.eqidx = [30 ];
 M_.mapping.e_a.eqidx = [5 31 ];
@@ -760,7 +760,7 @@ M_.lhs = {
 'ges_obs'; 
 'cp_obs'; 
 'lny'; 
-'lncp'; 
+'lnpi'; 
 'lnu'; 
 'lnges'; 
 'log(e_a)'; 
@@ -1011,11 +1011,11 @@ M_.params(25) = 0.304;
 varphi = M_.params(25);
 M_.params(27) = 1.002;
 piss = M_.params(27);
-M_.params(20) = 0.07000000000000001;
+M_.params(20) = 0.025;
 tau0 = M_.params(20);
-M_.params(22) = 0.12;
+M_.params(22) = 0.16;
 sig = M_.params(22);
-M_.params(21) = 3;
+M_.params(21) = 2.7;
 y0 = M_.params(21);
 M_.params(23) = 0.1;
 theta1 = M_.params(23);
@@ -1105,7 +1105,7 @@ options_.datafile = 'myobs';
 options_.first_obs = 1;
 options_.forecast = 8;
 options_.lik_init = 2;
-options_.mh_jscale = 0.6;
+options_.mh_jscale = 0.60;
 options_.mh_nblck = 1;
 options_.mh_replic = 10000;
 options_.mode_compute = 4;
@@ -1168,7 +1168,7 @@ ee_mat(:,strmatch(fx{ix},M_.exo_names,'exact')) = shock_mat;
 end
 [oo_.dr, info, M_.params] = resol(0, M_, options_, oo_.dr, oo_.dr.ys, oo_.exo_steady_state, oo_.exo_det_steady_state);
 y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat,options_.order);
-var_names={'lny','lncp','lnu','lnges'};
+var_names={'lny','lnpi','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
 draw_tables(var_names,M_,Ty,[],y_)
 legend('Estimated')
@@ -1185,20 +1185,24 @@ Tvec2 		= Tvec(1):Tfreq:(Tvec(1)+size(ee_mat2,1)*Tfreq);
 y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat2,options_.order);
 ee_matx = ee_mat2;
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 0.5; 
-y_carbon_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+ee_matx(end-Thorizon+1,idx) = 2.16; 
+y_scenario_1      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 ee_matx = ee_mat2;
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 1; 
-y_carbon_plus_plus      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+ee_matx(end-Thorizon+1,idx) = 2.38; 
+y_scenario_2      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 ee_matx = ee_mat2;
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = -0.5;
-y_carbon_neg       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
-var_names={'lny','lncp','lnu','lnges'};
+ee_matx(end-Thorizon+1,idx) = 6.67; 
+y_scenario_3       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+ee_matx = ee_mat2;
+idx = strmatch('eta_t',M_.exo_names,'exact');
+ee_matx(end-Thorizon+1,idx) = -1; 
+y_scenario_4       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+var_names={'lny','lnpi','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
-draw_tables(var_names,M_,Tvec2,[],y_,y_carbon_plus,y_carbon_plus_plus,y_carbon_neg)
-legend('Estimated','Carbon+','Carbon++','Carbon-')
+draw_tables(var_names,M_,Tvec2,[],y_,y_scenario_1,y_scenario_2,y_scenario_3,y_scenario_4)
+legend('Estimated','Scenario 1','Scenario 2','Scenario 3', 'Scenario 4')
 
 
 oo_.time = toc(tic0);
