@@ -330,7 +330,7 @@ y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat2,options_.order);
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 2.16; % add a 216 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = 2.38; % add a 238 percent increase in carbon price 
 % simulate the model
 y_scenario_1      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
@@ -339,30 +339,21 @@ y_scenario_1      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order)
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 2.38; % add a 238 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = 6.67; % add a 667 percent increase in carbon price 
 % simulate the model
-y_scenario_2      = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+y_scenario_2       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 %%% Scenario 3
 % make a copy of shock matrix
 ee_matx = ee_mat2;
 % select carbon shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 6.67; % add a 667 percent increase in carbon price 
-% simulate the model
-y_scenario_3       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
-
-%%% Scenario 4
-% make a copy of shock matrix
-ee_matx = ee_mat2;
-% select carbon shock
-idx = strmatch('eta_t',M_.exo_names,'exact');
 ee_matx(end-Thorizon+1,idx) = -1; % delete carbon tax
 % simulate the model
-y_scenario_4       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
+y_scenario_3       = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 % draw result
 var_names={'lny','lnpi','lnu','lnges'};
 Ty = [T(1)-Tfreq;T];
-draw_tables(var_names,M_,Tvec2,[],y_,y_scenario_1,y_scenario_2,y_scenario_3,y_scenario_4)
-legend('Estimated','Scenario 1','Scenario 2','Scenario 3', 'Scenario 4')
+draw_tables(var_names,M_,Tvec2,[],y_,y_scenario_1,y_scenario_2,y_scenario_3)
+legend('Estimated','Scenario 1','Scenario 2','Scenario 3')
